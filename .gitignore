@@ -1,4 +1,4 @@
-# Visyual Studio Code config
+# Visual Studio Code config
 .vscode
 
 # Byte-compiled / optimized / DLL files
@@ -6,6 +6,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# archives
+*.zip
 
 # Jupyter Notebook
 .ipynb_checkpoints
