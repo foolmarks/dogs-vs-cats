@@ -28,7 +28,7 @@ There are also no pooling layers - these have been replaced with convolutional l
 
 The output activation layer is a sigmoid function as we only have two classes - if the output of the sigmoid is > 0.5, the predicted class is 'dog', less that 0.5 is a prediction of 'cat'.
 
-The CNN has deliberately been kept simple (it only has 8 convolutional layers) so the expected prediction accuracy will not be higher than approximately 84%.
+The CNN has deliberately been kept simple (it only has 8 convolutional layers) so the expected prediction accuracy will not be higher than approximately 90%.
 
 To reduce overfitting, batch normalization layers have been used and also L2 kernel regularization.
 
@@ -38,10 +38,11 @@ The train.py script executes the training, evaluation and prediction accuracy te
 
 + Images are read from disk using the flow_from_directory() method.
 + On-the-fly image augmentation is used:
-  + images are resized to 200 x 200 using bilinear interpolation.
-  + random flipping along the vertical axis.
-  + random vertical and horizontal shifts.
-  + shuffling of the images between epochs.
+  + Normalization of pixel values from 0:255 to 0:1
+  + Images are resized to 200 x 200 using bilinear interpolation.
+  + Random flipping along the vertical axis.
+  + Random vertical and horizontal shifts.
+  + Shuffling of the images between epochs.
 + Early stopping of training if the validation accuracy stops increasing for a certain number of epochs.
   + The CNN parameters from the epoch with the best validation accuracy are automatically restored after training stops.
 + Saving of the trained model as JSON and HDF5 files.
