@@ -28,7 +28,9 @@ There are also no pooling layers - these have been replaced with convolutional l
 
 The output activation layer is a sigmoid function as we only have two classes - if the output of the sigmoid is > 0.5, the predicted class is 'dog', less that 0.5 is a prediction of 'cat'.
 
-The CNN has deliberately been kept simple (it only has 8 convolutional layers) so expected accuracy will not be higher than approximately 84%.
+The CNN has deliberately been kept simple (it only has 8 convolutional layers) so the expected prediction accuracy will not be higher than approximately 84%.
+
+To reduce overfitting, batch normalization layers have been used and also L2 kernel regularization.
 
 ## Training features
 
