@@ -104,7 +104,7 @@ os.remove(os.path.join(DATASET_DIR, 'train.zip'))
 
 
 ###############################################
-# resize and move the images to class folders
+# move the images to class folders
 ###############################################
 # make a list of all files currently in the train folder
 imageList = list()

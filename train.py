@@ -63,12 +63,19 @@ if (os.path.exists('results.csv')):
 ##############################################
 # Training parameters
 ##############################################
-EPOCHS = 50
+# very unlikely to reach 100 epochs due to Early Stopping callback
+EPOCHS = 100
+
+# batchsizes for training & validation
+# batchsize for prediction is 1
 TRAIN_BATCHSIZE = 64
 VAL_BATCHSIZE = 64
+
+# optimizer learning rate & decay rate
 LEARN_RATE = 0.0001
 DECAY_RATE = LEARN_RATE/10.0
 
+# image parameters
 IMAGE_HEIGHT = 200
 IMAGE_WIDTH = 200
 CHANNELS = 3
@@ -198,7 +205,7 @@ train_history=model.fit_generator(generator=train_generator,
 print("\nTensorBoard can be opened with the command: tensorboard --logdir={dir} --host localhost --port 6006".format(dir=TB_LOG_DIR))
 
 print('\n##############################################')
-print('Evaluate model accuracy with validations set..')
+print(' Evaluate model accuracy with validation set..')
 print('##############################################')
 scores = model.evaluate_generator(generator=validation_generator,
                                   max_queue_size=10,
@@ -210,7 +217,7 @@ print ('Evaluation Accuracy: ', scores[1])
 
 
 print('\n##############################################')
-print('Predictions with test dataset..')
+print(' Test predictions accuracy with test dataset..')
 print('##############################################')
 
 # reset the generator before using it for predictions
@@ -278,7 +285,7 @@ print('\nPredictions and true labels saved to results.csv')
 
 
 print('\n##############################################')
-print('Saving trained model..')
+print(' Saving trained model..')
 print('##############################################')
 
 # save just the weights (no architecture) to an HDF5 format file
@@ -292,7 +299,7 @@ print('\nTrained model saved to {dir}'.format(dir=KERAS_MODEL_DIR))
 
 
 print('\n##############################################')
-print('FINISHED!')
+print(' FINISHED!')
 print('##############################################')
 
 
