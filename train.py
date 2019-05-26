@@ -64,7 +64,7 @@ if (os.path.exists('results.csv')):
 # Training parameters
 ##############################################
 # very unlikely to reach 100 epochs due to Early Stopping callback
-EPOCHS = 1
+EPOCHS = 100
 
 # batchsizes for training & validation
 # batchsize for prediction is 1
