@@ -64,7 +64,7 @@ if (os.path.exists('results.csv')):
 # Training parameters
 ##############################################
 # very unlikely to reach 100 epochs due to Early Stopping callback
-EPOCHS = 100
+EPOCHS = 1
 
 # batchsizes for training & validation
 # batchsize for prediction is 1
@@ -148,12 +148,11 @@ prediction_generator = datagen_p.flow_from_directory(TEST_DIR,
                                                      shuffle=False)
 
 
-
 ##############################################
 # Compile model
 ##############################################
 # Adam optimizer to change weights & biases
-# Loss function is categorical crossentropy
+# Loss function is binary crossentropy
 model.compile(optimizer=Adam(lr=LEARN_RATE, decay=0.0),
               loss='binary_crossentropy',
               metrics=['binary_accuracy'])
@@ -230,15 +229,17 @@ filenames = prediction_generator.filenames
 predict_steps = prediction_generator.n
 
 # predict generator returns a list of all predictions
-pred = model.predict_generator(prediction_generator,
+pred = model.predict_generator(generator=prediction_generator,
                                steps=predict_steps,
                                verbose=1)
 
 # the .class_indices attribute returns a dictionary with keys = classes
 labels = (prediction_generator.class_indices)
 
+
 # make a new dictionary with keys & values swapped 
 labels = dict((v,k) for k,v in labels.items())
+
 
 # use the 'labels dictionary to create a list of predictions as strings
 # predictions is a list of sigmoid outputs

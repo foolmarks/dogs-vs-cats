@@ -12,3 +12,19 @@ __pycache__/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+# saved keras model
+keras_model
+*.json
+*.h5
+
+# tensorboard log
+tb_logs
+
+
+# augmented images
+aug_img
+
+
+# csv
+*.csv
+
