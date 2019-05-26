@@ -22,7 +22,7 @@ The images in the test folder are only used for prediction to guarantee that the
 
 ## The Convolution Neural Network
 
-The customCNN.py script uses the Keras Functional API to describe the simple CNN. The CNN is fully-convolutional - the dense or fully-connected layers have been replaced with convolutional layers that have their kernel sizes, number of filters and stride lengths set such that they create output shapes that mimic the output shapes of dense/FC layers.
+The customCNN.py script uses the Keras Functional API to describe the simple CNN. The CNN is *fully-convolutional* - the dense or fully-connected layers have been replaced with convolutional layers that have their kernel sizes, number of filters and stride lengths set such that they create output shapes that mimic the output shapes of dense/FC layers.
 
 There are no pooling layers - these have also been replaced with convolutional layers that have their kernel size and strides set to the same value which is > 1.
 
