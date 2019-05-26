@@ -46,3 +46,4 @@ The train.py script executes the training, evaluation and prediction accuracy te
 + Early stopping of training if the validation accuracy stops increasing for a certain number of epochs.
   + The CNN parameters from the epoch with the best validation accuracy are automatically restored after training stops.
 + Saving of the trained model as JSON and HDF5 files.
++ Prediction results saved to a .csv file using Pandas.
