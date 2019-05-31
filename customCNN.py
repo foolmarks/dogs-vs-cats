@@ -10,10 +10,9 @@ Sigmoid activation in the final layer.
 '''
 
 from keras.models import Model
-from keras.layers.advanced_activations import LeakyReLU
 from keras import regularizers
-from keras.layers import Input, Flatten, Dropout, Dense
-from keras.layers import Conv2D, BatchNormalization, Activation
+from keras.layers import Input, Flatten, Conv2D
+from keras.layers import BatchNormalization, Activation
 
 
 # wrapper function for the 2D convolution layer
@@ -42,7 +41,7 @@ def customCNN(input_shape=(200, 200, 3)):
       net = BatchNormalization()(net)
 
       net = conv_layer(net, 128, 5, 5)
-      net = conv_layer(net, 1, 5, 5)
+      net = conv_layer(net, 1, 5, 7)
       net = BatchNormalization()(net)
       net = Flatten()(net)
       output_layer = Activation('sigmoid')(net)

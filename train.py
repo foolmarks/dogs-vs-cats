@@ -10,7 +10,9 @@ import numpy as np
 import pandas as pd
 import os
 import shutil
-import sys
+
+
+import config
 
 from customCNN import customCNN
 
@@ -22,39 +24,26 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 ##############################################
 # Set up directories
 ##############################################
-# Returns the directory the current script (or interpreter) is running in
-def get_script_directory():
-    path = os.path.realpath(sys.argv[0])
-    if os.path.isdir(path):
-        return path
-    else:
-        return os.path.dirname(path)
 
-
-SCRIPT_DIR = get_script_directory()
+SCRIPT_DIR = config.get_script_directory()
 print('This script is located in: ', SCRIPT_DIR)
 
-TRAIN_DIR = os.path.join(SCRIPT_DIR, 'dataset/train')
-VALID_DIR = os.path.join(SCRIPT_DIR, 'dataset/valid')
-TEST_DIR = os.path.join(SCRIPT_DIR, 'dataset/test')
+TRAIN_DIR = os.path.join(SCRIPT_DIR, config.__DSET__, config.__TRAIN__)
+VALID_DIR = os.path.join(SCRIPT_DIR, config.__DSET__, config.__VALID__)
+TEST_DIR = os.path.join(SCRIPT_DIR, config.__DSET__, config.__TEST__)
 
 # Augmented images folder
-AUG_IMG_DIR = os.path.join(SCRIPT_DIR,'aug_img')
+AUG_IMG_DIR = os.path.join(SCRIPT_DIR, config.__AUG__)
 
 # Keras model folder
-KERAS_MODEL_DIR = os.path.join(SCRIPT_DIR, 'keras_model')
+KERAS_MODEL_DIR = os.path.join(SCRIPT_DIR, config.__KMOD__)
 
 # TensorBoard folder
-TB_LOG_DIR = os.path.join(SCRIPT_DIR, 'tb_logs')
+TB_LOG_DIR = os.path.join(SCRIPT_DIR, config.__TBLOG__)
 
 # remove previous results
 dir_list = [KERAS_MODEL_DIR, TB_LOG_DIR, AUG_IMG_DIR]
- 
-for dir in dir_list: 
-    if (os.path.exists(dir)):
-        shutil.rmtree(dir)
-    os.makedirs(dir)
-    print("Directory" , dir ,  "created ")
+config.delete_create_dir(dir_list)
 
 if (os.path.exists('results.csv')):
     os.remove('results.csv')
@@ -68,23 +57,20 @@ EPOCHS = 100
 
 # batchsizes for training & validation
 # batchsize for prediction is 1
-TRAIN_BATCHSIZE = 64
-VAL_BATCHSIZE = 64
+BATCHSIZE = 32
+
 
 # optimizer learning rate & decay rate
 LEARN_RATE = 0.0001
 DECAY_RATE = LEARN_RATE/10.0
 
-# image parameters
-IMAGE_HEIGHT = 200
-IMAGE_WIDTH = 200
-CHANNELS = 3
-
+# assume we have 3 chhanels or 1 channel
+COLOR_MODE = 'rgb' if config.IMG_CHAN == 3 else 'grayscale'
 
 ##############################################
 # CNN
 ##############################################
-model = customCNN(input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, CHANNELS))
+model = customCNN(input_shape=(config.IMG_HEIGHT, config.IMG_WIDTH, config.IMG_CHAN))
 
 print('\n##############################################')
 print(' Model Summary')
@@ -101,7 +87,6 @@ print("Model Outputs: {ops}".format(ops=(model.outputs)))
 ##############################################
 
 # data augmentation for training & validation
-#   - image rescaling to 200x200 with bilinear interpolation
 #   - pixel data is rescaled from 0:225 to 0:1.0
 #   - random rotation of 5° max
 #   - random horiz flip (images are flipped along vertical axis)
@@ -117,12 +102,13 @@ datagen_tv = ImageDataGenerator(rescale=1/255,
 datagen_p = ImageDataGenerator(rescale=1/255)
 
 # train generator takes images from the specified directory, applies
-# a resize to 200x200 with bilinear interpolation.
+# a resize (if required) with bilinear interpolation.
 train_generator = datagen_tv.flow_from_directory(TRAIN_DIR,
-                                                 target_size=(IMAGE_HEIGHT, IMAGE_WIDTH),
+                                                 target_size=(config.IMG_HEIGHT, config.IMG_WIDTH),
                                                  interpolation='bilinear',
-                                                 batch_size=TRAIN_BATCHSIZE,
+                                                 batch_size=BATCHSIZE,
                                                  class_mode='binary',
+                                                 color_mode=COLOR_MODE,
                                                  shuffle=True,
                                                  seed=42
                                                  )
@@ -131,20 +117,22 @@ uncomment save_to_dir=AUG_IMG_DIR' to save the augmented images
 note that this will take up considerable disk space
 '''
 validation_generator = datagen_tv.flow_from_directory(VALID_DIR,
-                                                      target_size=(IMAGE_HEIGHT, IMAGE_WIDTH),
+                                                      target_size=(config.IMG_HEIGHT, config.IMG_WIDTH),
                                                       interpolation='bilinear',
-                                                      batch_size=VAL_BATCHSIZE,
+                                                      batch_size=BATCHSIZE,
                                                       class_mode='binary',
+                                                      color_mode=COLOR_MODE,
                                                       shuffle=True,
                                                     # save_to_dir=AUG_IMG_DIR
                                                       )
 
 
 prediction_generator = datagen_p.flow_from_directory(TEST_DIR,
-                                                     target_size=(IMAGE_HEIGHT, IMAGE_WIDTH),
+                                                     target_size=(config.IMG_HEIGHT, config.IMG_WIDTH),
                                                      interpolation='bilinear',
                                                      batch_size=1,
                                                      class_mode='binary',
+                                                     color_mode=COLOR_MODE,
                                                      shuffle=False)
 
 
@@ -164,7 +152,7 @@ model.compile(optimizer=Adam(lr=LEARN_RATE, decay=0.0),
 ##############################################
 # create Tensorboard callback
 tb_call = TensorBoard(log_dir=TB_LOG_DIR,
-                      batch_size=TRAIN_BATCHSIZE)
+                      batch_size=BATCHSIZE)
 
 '''
 Early stop callback to halt training if validation accuracy 
