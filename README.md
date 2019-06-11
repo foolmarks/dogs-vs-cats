@@ -6,18 +6,22 @@ For more details, see my website: http://www.markharvey.info/ml/dogs_cats/dogs_c
 
 ## Instructions
 
-1. Clone or download the repository.
+1. Clone or download this repository.
 
-2. Download dataset from https://www.kaggle.com/c/dogs-vs-cats/data.  The downloaded zip file should be placed in the same folder as the python (.py) scripts.
+2. Download the dataset from https://www.kaggle.com/c/dogs-vs-cats/data.  The downloaded zip file should be placed in the same folder as the python (.py) scripts.
 
-3. Run create_datasets.py - must be run at least once. Does not need to be run again if no change to the dataset.
+3. If you are working from within a python virtual environment, activate it.
 
-4. Run train.py - executes training, validation and prediction accuracy testing of the trained model. It saves the trained model in ./keras_model.
+4. Run create_datasets.py - must be run at least once. Does not need to be run again if no change to the dataset.
+
+5. Run train.py - executes training, validation and prediction accuracy testing of the trained model. It saves the trained model in ./keras_model.
 
 
 ## Dependencies
 
 The python code has been written for, and only tested with, python 3.6.
+
+All python scripts were run from within a virtual environment created with Anaconda3. The environment YAML file is included in this repository so that it can be recreated.
 
 
 
@@ -53,4 +57,10 @@ Train using batchsize of 64, use default values for learning rate and epochs:<br
 
 Train for 10 epochs using batchsize of 50, use default value for learning rate:<br>
 `python train.py --batchsize 50 --epochs 10` 
+
+
+## Jupyter NoteBooks
+
+There are two Jupyter NoteBooks included in the repository. Their main purpose is to provide some step-by-step explanations of how the design works, they do not substitute the python scripts.
+
 
