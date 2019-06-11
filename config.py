@@ -12,7 +12,7 @@ def get_script_directory():
     else:
         return os.path.dirname(path)
 
-# delete list of directories
+# delete & recreate list of directories
 def delete_create_dir(dir_list):
     for dir in dir_list: 
         if (os.path.exists(dir)):
@@ -21,14 +21,14 @@ def delete_create_dir(dir_list):
 
 
 # global variables
-__DSET__ = 'dataset'
-__TRAIN__ = 'train'
-__VALID__ = 'valid'
-__TEST__ = 'test'
+_DSET_ = 'dataset'
+_TRAIN_ = 'train'
+_VALID_ = 'valid'
+_TEST_ = 'test'
 
-__AUG__ = 'aug_img'
-__KMOD__ = 'keras_model'
-__TBLOG__ = 'tb_logs'
+_AUG_ = 'aug_img'
+_KMOD_ = 'keras_model'
+_TBLOG_ = 'tb_logs'
 
 
 # image parameters

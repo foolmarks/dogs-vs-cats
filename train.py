@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import os
 import shutil
+import argparse
 
 
 import config
@@ -22,24 +23,62 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
 
 ##############################################
+# command line arguments
+##############################################
+
+# construct the argument parse and parse the arguments
+ap = argparse.ArgumentParser()
+
+ap.add_argument('-b', '--batchsize',
+                type=int,
+                default=32,
+	            help='training batchsize' )
+
+ap.add_argument('-e', '--epochs',
+                type=int,
+                default=100,
+	            help='number of training epochs')
+
+ap.add_argument('-lr', '--learnrate',
+                type=float,
+                default=0.0001,
+	            help='optimizer learning rate')
+
+args = ap.parse_args()
+
+
+print('\n----------------------------------------------')
+print(' Command line options:')
+
+print ('--batchsize: ', args.batchsize)
+print ('--learnrate: ', args.learnrate)
+print ('--epochs   : ', args.epochs)
+
+print('----------------------------------------------')
+
+
+
+
+
+##############################################
 # Set up directories
 ##############################################
 
 SCRIPT_DIR = config.get_script_directory()
 print('This script is located in: ', SCRIPT_DIR)
 
-TRAIN_DIR = os.path.join(SCRIPT_DIR, config.__DSET__, config.__TRAIN__)
-VALID_DIR = os.path.join(SCRIPT_DIR, config.__DSET__, config.__VALID__)
-TEST_DIR = os.path.join(SCRIPT_DIR, config.__DSET__, config.__TEST__)
+TRAIN_DIR = os.path.join(SCRIPT_DIR, config._DSET_, config._TRAIN_)
+VALID_DIR = os.path.join(SCRIPT_DIR, config._DSET_, config._VALID_)
+TEST_DIR = os.path.join(SCRIPT_DIR, config._DSET_, config._TEST_)
 
 # Augmented images folder
-AUG_IMG_DIR = os.path.join(SCRIPT_DIR, config.__AUG__)
+AUG_IMG_DIR = os.path.join(SCRIPT_DIR, config._AUG_)
 
 # Keras model folder
-KERAS_MODEL_DIR = os.path.join(SCRIPT_DIR, config.__KMOD__)
+KERAS_MODEL_DIR = os.path.join(SCRIPT_DIR, config._KMOD_)
 
 # TensorBoard folder
-TB_LOG_DIR = os.path.join(SCRIPT_DIR, config.__TBLOG__)
+TB_LOG_DIR = os.path.join(SCRIPT_DIR, config._TBLOG_)
 
 # remove previous results
 dir_list = [KERAS_MODEL_DIR, TB_LOG_DIR, AUG_IMG_DIR]
@@ -53,18 +92,18 @@ if (os.path.exists('results.csv')):
 # Training parameters
 ##############################################
 # very unlikely to reach 100 epochs due to Early Stopping callback
-EPOCHS = 100
+EPOCHS = args.epochs
 
 # batchsizes for training & validation
 # batchsize for prediction is 1
-BATCHSIZE = 32
+BATCHSIZE = args.batchsize
 
 
 # optimizer learning rate & decay rate
-LEARN_RATE = 0.0001
+LEARN_RATE = args.learnrate
 DECAY_RATE = LEARN_RATE/10.0
 
-# assume we have 3 chhanels or 1 channel
+# assume we have either 3 channels or 1 channel
 COLOR_MODE = 'rgb' if config.IMG_CHAN == 3 else 'grayscale'
 
 ##############################################
@@ -72,9 +111,9 @@ COLOR_MODE = 'rgb' if config.IMG_CHAN == 3 else 'grayscale'
 ##############################################
 model = customCNN(input_shape=(config.IMG_HEIGHT, config.IMG_WIDTH, config.IMG_CHAN))
 
-print('\n##############################################')
+print('\n----------------------------------------------')
 print(' Model Summary')
-print('##############################################')
+print('----------------------------------------------')
 # print a summary of the model
 print(model.summary())
 print("Model Inputs: {ips}".format(ips=(model.inputs)))
@@ -169,9 +208,9 @@ earlystop_call = EarlyStopping(monitor='val_binary_accuracy',
 
 callbacks_list = [tb_call, earlystop_call]
 
-print('\n##############################################')
+print('\n----------------------------------------------')
 print(' Training model with training set..')
-print('##############################################')
+print('----------------------------------------------')
 
 # calculate number of steps in one training epoch
 train_steps = train_generator.n//train_generator.batch_size
@@ -191,9 +230,9 @@ train_history=model.fit_generator(generator=train_generator,
 
 print("\nTensorBoard can be opened with the command: tensorboard --logdir={dir} --host localhost --port 6006".format(dir=TB_LOG_DIR))
 
-print('\n##############################################')
+print('\n----------------------------------------------')
 print(' Evaluate model accuracy with validation set..')
-print('##############################################')
+print('----------------------------------------------')
 scores = model.evaluate_generator(generator=validation_generator,
                                   max_queue_size=10,
                                   steps=val_steps,
@@ -203,9 +242,9 @@ print ('Evaluation Loss    : ', scores[0])
 print ('Evaluation Accuracy: ', scores[1])
 
 
-print('\n##############################################')
+print('\n----------------------------------------------')
 print(' Test predictions accuracy with test dataset..')
-print('##############################################')
+print('----------------------------------------------')
 
 # reset the generator before using it for predictions
 prediction_generator.reset()
@@ -273,9 +312,9 @@ results.to_csv('results.csv',index=False)
 print('\nPredictions and true labels saved to results.csv')
 
 
-print('\n##############################################')
+print('\n----------------------------------------------')
 print(' Saving trained model..')
-print('##############################################')
+print('----------------------------------------------')
 
 # save just the weights (no architecture) to an HDF5 format file
 model.save_weights(os.path.join(KERAS_MODEL_DIR,'k_model_weights.h5'))
@@ -287,8 +326,14 @@ with open(os.path.join(KERAS_MODEL_DIR,'k_model_architecture.json'), 'w') as f:
 print('\nTrained model saved to {dir}'.format(dir=KERAS_MODEL_DIR))
 
 
-print('\n##############################################')
+print('\n----------------------------------------------')
 print(' FINISHED!')
-print('##############################################')
+print('----------------------------------------------')
+
+
+
+
+
+
 
 

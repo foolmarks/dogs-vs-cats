@@ -33,9 +33,9 @@ import random
 
 import config
 
-print('###############################################')
+print('----------------------------------------------')
 print(' DATASET PREPARATION STARTED..')
-print('###############################################')
+print('----------------------------------------------')
 
 SCRIPT_DIR = config.get_script_directory()
 print('\nThis script is located in: ', SCRIPT_DIR)
@@ -44,12 +44,12 @@ print('\nThis script is located in: ', SCRIPT_DIR)
 # make the required folders
 ###############################################
 # dataset top level
-DATASET_DIR = os.path.join(SCRIPT_DIR, config.__DSET__)
+DATASET_DIR = os.path.join(SCRIPT_DIR, config._DSET_)
 
 # train, validation and test folders
-TRAIN_DIR = os.path.join(DATASET_DIR, config.__TRAIN__)
-VALID_DIR = os.path.join(DATASET_DIR, config.__VALID__)
-TEST_DIR = os.path.join(DATASET_DIR, config.__TEST__)
+TRAIN_DIR = os.path.join(DATASET_DIR, config._TRAIN_)
+VALID_DIR = os.path.join(DATASET_DIR, config._VALID_)
+TEST_DIR = os.path.join(DATASET_DIR, config._TEST_)
 
 # class folders
 TRAIN_CAT_DIR = os.path.join(TRAIN_DIR, 'cat')
@@ -149,7 +149,7 @@ for dir in dir_list:
     file_count = sum([len(files) for root,dir,files in os.walk(dir)])
     print('Number of Files in', dir,': ',file_count)
 
-print('\n###############################################')
+print('\n----------------------------------------------')
 print(' DATASET PREPARATION FINISHED')
-print('###############################################')
+print('----------------------------------------------')
 

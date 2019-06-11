@@ -1,11 +1,8 @@
 '''
 Simple custom CNN
-
 There are no pooling layers, instead convolution layers with 
 2x2 kernels and stride length = 2 are used for data reduction.
-
 Dense layers are also replaced with convolution layers.
-
 Sigmoid activation in the final layer.
 '''
 
@@ -47,4 +44,3 @@ def customCNN(input_shape=(200, 200, 3)):
       output_layer = Activation('sigmoid')(net)
      
       return Model(inputs=input_layer, outputs=output_layer)
-
