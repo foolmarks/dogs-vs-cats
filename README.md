@@ -15,7 +15,13 @@ For more details, see my website: http://www.markharvey.info/ml/dogs_cats/dogs_c
 4. Run train.py - executes training, validation and prediction accuracy testing of the trained model. It saves the trained model in ./keras_model.
 
 
-### Command line arguments
+## Dependencies
+
+The python code has been written for, and only tested with, python 3.6.
+
+
+
+## Command line arguments
 
 Note that train.py has 3 optional command line arguments:
 
