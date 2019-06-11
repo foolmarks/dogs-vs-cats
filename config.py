@@ -17,7 +17,7 @@ def delete_create_dir(dir_list):
     for dir in dir_list: 
         if (os.path.exists(dir)):
             shutil.rmtree(dir)
-            os.makedirs(dir)
+        os.makedirs(dir)
 
 
 # global variables
